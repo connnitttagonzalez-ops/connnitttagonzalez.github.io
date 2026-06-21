@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Hadaluz · boutique encantada del bosque. Ropa y accesorios para haditas mágicas." />
+  <title>✦ Hadaluz · boutique encantada del bosque ✦</title>
+
+  <!-- Tipografías redondeadas y delicadas (Pacifico para el logo, Fredoka títulos, Quicksand texto) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Favicon de hada en SVG embebido -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ╔══════════════════════════════════════╗
+       ║   PANTALLA DE CARGA MÁGICA            ║
+       ╚══════════════════════════════════════╝ -->
+  <div id="loader" class="loader" aria-hidden="true">
+    <div class="loader__orb">
+      <svg viewBox="0 0 120 120" class="loader__fairy">
+        <!-- hadita girando dentro de una burbuja -->
+        <g class="loader__wings">
+          <ellipse cx="42" cy="58" rx="18" ry="26" fill="url(#wingGrad)" opacity=".8"/>
+          <ellipse cx="78" cy="58" rx="18" ry="26" fill="url(#wingGrad)" opacity=".8"/>
+        </g>
+        <circle cx="60" cy="48" r="8" fill="#ffe6f4"/>
+        <path d="M52 58 Q60 92 68 58 Z" fill="#ff9ed8"/>
+        <defs>
+          <linearGradient id="wingGrad" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#c7ecff"/>
+            <stop offset=".5" stop-color="#cdb8ff"/>
+            <stop offset="1" stop-color="#ff9ed8"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <p class="loader__title">Hadaluz</p>
+    <div class="loader__bar"><span class="loader__fill"></span></div>
+    <p class="loader__hint">abriendo la boutique encantada…</p>
+  </div>
+
+  <!-- Lienzo de partículas (destellos, mariposas, hojas) -->
+  <canvas id="fx" class="fx-canvas" aria-hidden="true"></canvas>
+  <!-- Halo de brillo que sigue al mouse -->
+  <div id="glow" class="cursor-glow" aria-hidden="true"></div>
+
+  <!-- ╔══════════════════════════════════════╗
+       ║   ENCABEZADO / NAVEGACIÓN            ║
+       ╚══════════════════════════════════════╝ -->
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a href="#/inicio" class="logo" data-egg="logo" aria-label="Hadaluz inicio">
+        <span class="logo__mark">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <path d="M24 6 C18 14 8 16 8 24 c0 8 8 12 16 18 8-6 16-10 16-18 0-8-10-10-16-18Z" fill="url(#logoG)"/>
+            <circle cx="24" cy="22" r="4" fill="#fff" opacity=".9"/>
+            <defs><linearGradient id="logoG" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#ff7ec9"/><stop offset=".5" stop-color="#cdb8ff"/><stop offset="1" stop-color="#c7ecff"/>
+            </linearGradient></defs>
+          </svg>
+        </span>
+        <span class="logo__text">Hadaluz</span>
+      </a>
+
+      <nav class="nav" aria-label="principal">
+        <a href="#/inicio" class="nav__link" data-route-link="inicio">Inicio</a>
+        <a href="#/catalogo" class="nav__link" data-route-link="catalogo">Catálogo</a>
+        <a href="#/nosotros" class="nav__link" data-route-link="nosotros">Nosotras</a>
+        <a href="#/contacto" class="nav__link" data-route-link="contacto">Contacto</a>
+      </nav>
+
+      <div class="topbar__actions">
+        <button class="iconbtn" id="soundToggle" title="Sonidos suaves" aria-label="Activar sonidos">
+          <span class="iconbtn__off">🔈</span><span class="iconbtn__on">🔊</span>
+        </button>
+        <button class="iconbtn" id="openFavs" title="Favoritos" aria-label="Abrir favoritos">
+          🤍<span class="badge" id="favBadge">0</span>
+        </button>
+        <button class="iconbtn" id="openCart" title="Carrito" aria-label="Abrir carrito">
+          🛍️<span class="badge" id="cartBadge">0</span>
+        </button>
+        <a href="#/login" class="iconbtn iconbtn--user" title="Mi cuenta" aria-label="Mi cuenta">✿</a>
+        <button class="hamburger" id="hamburger" aria-label="Menú" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenedor donde el router muestra/oculta vistas -->
+  <main id="app">
+
+    <!-- ═══════════════ VISTA: INICIO / LANDING ═══════════════ -->
+    <section class="view" data-view="inicio">
+
+      <!-- HERO enorme con haditas ilustradas -->
+      <div class="hero">
+        <div class="hero__sky"></div>
+        <div class="hero__rainbow"></div>
+
+        <div class="hero__content">
+          <p class="hero__eyebrow">✦ boutique encantada del bosque ✦</p>
+          <h1 class="hero__title">Vestí<br><em>tu magia</em></h1>
+          <p class="hero__lead">Ropa y accesorios tejidos con luz de luna, rocío y purpurina para haditas que brillan con luz propia.</p>
+          <div class="hero__cta">
+            <button class="btn btn--glossy btn--big" data-go="catalogo">🍃 Entrar al Bosque Mágico</button>
+            <button class="btn btn--ghost" data-go="nosotros">Nuestra historia</button>
+          </div>
+          <div class="hero__chips">
+            <span>🌸 hecho a mano por hadas</span>
+            <span>✨ brillo eterno garantizado</span>
+            <span>🦋 envíos a todo el reino</span>
+          </div>
+        </div>
+
+        <!-- Haditas ilustradas en SVG usando la ropa de la tienda -->
+        <div class="hero__art" aria-hidden="true">
+          <svg viewBox="0 0 420 460" class="fairyArt">
+            <!-- aura -->
+            <circle cx="210" cy="230" r="180" fill="url(#auraG)" opacity=".55"/>
+            <!-- hadita central -->
+            <g class="fairy fairy--center">
+              <!-- alas -->
+              <g class="fairy__wings">
+                <path d="M205 250 C150 180 120 230 160 280 C185 305 205 285 205 250Z" fill="url(#wA)" opacity=".85"/>
+                <path d="M215 250 C270 180 300 230 260 280 C235 305 215 285 215 250Z" fill="url(#wA)" opacity=".85"/>
+              </g>
+              <!-- vestido encantado -->
+              <path d="M180 250 Q210 360 240 250 Q245 300 210 360 Q175 300 180 250Z" fill="url(#dressG)"/>
+              <path d="M186 256 Q210 330 234 256" fill="none" stroke="#fff" stroke-width="2" opacity=".6"/>
+              <!-- torso -->
+              <rect x="198" y="222" width="24" height="36" rx="12" fill="#ffd9ef"/>
+              <!-- cabeza -->
+              <circle cx="210" cy="206" r="20" fill="#ffe9f5"/>
+              <path d="M190 200 q20 -28 40 0 q-6 -16 -20 -16 q-14 0 -20 16Z" fill="#caa6ff"/>
+              <!-- corona -->
+              <path d="M198 188 l4 8 6 -10 6 10 4 -8 -2 12 -18 0Z" fill="#ffe27a" stroke="#ffd24d"/>
+              <!-- carita -->
+              <circle cx="204" cy="208" r="2" fill="#7a5a8c"/><circle cx="216" cy="208" r="2" fill="#7a5a8c"/>
+              <path d="M205 214 q5 4 10 0" stroke="#e88" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+              <circle cx="200" cy="212" r="2.4" fill="#ff9ed8" opacity=".6"/><circle cx="220" cy="212" r="2.4" fill="#ff9ed8" opacity=".6"/>
+              <!-- varita -->
+              <line x1="232" y1="248" x2="256" y2="220" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+              <path d="M256 210 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3Z" fill="#fff"/>
+            </g>
+
+            <!-- hadita pequeña 1 -->
+            <g class="fairy fairy--mini1">
+              <path d="M70 150 C40 120 25 150 50 175 C65 188 75 172 70 150Z" fill="url(#wB)" opacity=".8"/>
+              <path d="M78 150 C108 120 123 150 98 175 C83 188 73 172 78 150Z" fill="url(#wB)" opacity=".8"/>
+              <path d="M62 150 Q74 210 86 150 Z" fill="url(#capeG)"/>
+              <circle cx="74" cy="138" r="12" fill="#ffe9f5"/>
+              <path d="M62 134 q12 -16 24 0 q-4 -10 -12 -10 q-8 0 -12 10Z" fill="#ffb3d9"/>
+            </g>
+
+            <!-- hadita pequeña 2 -->
+            <g class="fairy fairy--mini2">
+              <path d="M330 320 C300 290 285 320 310 345 C325 358 335 342 330 320Z" fill="url(#wC)" opacity=".8"/>
+              <path d="M338 320 C368 290 383 320 358 345 C343 358 333 342 338 320Z" fill="url(#wC)" opacity=".8"/>
+              <path d="M322 320 Q334 380 346 320 Z" fill="url(#dress2G)"/>
+              <circle cx="334" cy="308" r="12" fill="#ffe9f5"/>
+              <path d="M322 304 q12 -16 24 0 q-4 -10 -12 -10 q-8 0 -12 10Z" fill="#b9f3d4"/>
+            </g>
+
+            <defs>
+              <radialGradient id="auraG"><stop offset="0" stop-color="#fff7fc"/><stop offset=".6" stop-color="#ffd4ee"/><stop offset="1" stop-color="#cdb8ff" stop-opacity="0"/></radialGradient>
+              <linearGradient id="wA" x1="0" x2="1"><stop offset="0" stop-color="#c7ecff"/><stop offset="1" stop-color="#cdb8ff"/></linearGradient>
+              <linearGradient id="wB" x1="0" x2="1"><stop offset="0" stop-color="#ffd4ee"/><stop offset="1" stop-color="#ff9ed8"/></linearGradient>
+              <linearGradient id="wC" x1="0" x2="1"><stop offset="0" stop-color="#b3f5d1"/><stop offset="1" stop-color="#c7ecff"/></linearGradient>
+              <linearGradient id="dressG" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ff9ed8"/><stop offset="1" stop-color="#cdb8ff"/></linearGradient>
+              <linearGradient id="dress2G" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#b3f5d1"/><stop offset="1" stop-color="#c7ecff"/></linearGradient>
+              <linearGradient id="capeG" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#cdb8ff"/><stop offset="1" stop-color="#c7ecff"/></linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="hero__scroll">⌄ deslizá para descubrir ⌄</div>
+      </div>
+
+      <!-- BENEFICIOS -->
+      <div class="strip">
+        <div class="strip__item"><span>🚚</span><b>Envío encantado</b><small>gratis desde $25.000</small></div>
+        <div class="strip__item"><span>🌷</span><b>100% mágico</b><small>materiales del bosque</small></div>
+        <div class="strip__item"><span>💖</span><b>Cambios sin hechizos</b><small>30 días de devolución</small></div>
+        <div class="strip__item"><span>🔒</span><b>Pago seguro</b><small>protegido por hadas</small></div>
+      </div>
+
+      <!-- CATEGORÍAS -->
+      <section class="block reveal">
+        <div class="window">
+          <div class="window__bar"><span class="window__dots"><i></i><i></i><i></i></span><span class="window__name">✿ categorias.exe</span></div>
+          <div class="window__body">
+            <h2 class="h2">Explorá el bosque</h2>
+            <p class="muted">Cada rincón guarda su propia magia.</p>
+            <div class="catgrid" id="catGrid"><!-- categorías por JS --></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRODUCTOS DESTACADOS -->
+      <section class="block reveal">
+        <div class="window">
+          <div class="window__bar"><span class="window__dots"><i></i><i></i><i></i></span><span class="window__name">★ destacados.exe</span></div>
+          <div class="window__body">
+            <div class="block__head">
+              <div><h2 class="h2">Tesoros destacados</h2><p class="muted">Lo más codiciado del reino esta luna.</p></div>
+              <button class="btn btn--ghost" data-go="catalogo">Ver todo el catálogo →</button>
+            </div>
+            <div class="prodgrid" id="featuredGrid"><!-- destacados por JS --></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BANNER OFERTAS -->
+      <section class="block reveal">
+        <div class="promo">
+          <div class="promo__shine"></div>
+          <div class="promo__text">
+            <span class="promo__tag">✦ luna llena ✦</span>
+            <h2>Hechizo de descuentos</h2>
+            <p>Hasta <b>40% OFF</b> en la Colección Primavera Encantada. Solo mientras dure el brillo de la luna.</p>
+            <button class="btn btn--glossy" data-go="catalogo">Atrapar la oferta</button>
+          </div>
+          <div class="promo__deco">🌙✨🎀</div>
+        </div>
+      </section>
+
+      <!-- OPINIONES -->
+      <section class="block reveal">
+        <div class="window">
+          <div class="window__bar"><span class="window__dots"><i></i><i></i><i></i></span><span class="window__name">💬 opiniones.exe</span></div>
+          <div class="window__body">
+            <h2 class="h2">Voces del bosque</h2>
+            <div class="reviews" id="homeReviews"><!-- reseñas por JS --></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEWSLETTER -->
+      <section class="block reveal">
+        <div class="news">
+          <div class="news__bubbles" aria-hidden="true"></div>
+          <h2>Unite al círculo de hadas 🧚</h2>
+          <p>Recibí hechizos de descuento, lanzamientos secretos y polvo de estrellas en tu correo.</p>
+          <div class="news__form">
+            <input type="email" id="newsEmail" class="field" placeholder="tu-correo@bosque.com" aria-label="Tu correo" />
+            <button class="btn btn--glossy" id="newsBtn">Suscribirme ✦</button>
+          </div>
+          <p class="news__msg" id="newsMsg" role="status"></p>
+        </div>
+      </section>
+    </section>
+
+    <!-- ═══════════════ VISTA: CATÁLOGO ═══════════════ -->
+    <section class="view" data-view="catalogo" hidden>
+      <div class="block">
+        <div class="window">
+          <div class="window__bar"><span class="window__dots"><i></i><i></i><i></i></span><span class="window__name">🛍️ catalogo.exe</span></div>
+          <div class="window__body">
+            <h2 class="h2">El catálogo encantado</h2>
+            <p class="muted">Filtrá por rincón del bosque o buscá tu tesoro.</p>
+
+            <div class="toolbar">
+              <input type="search" id="searchInput" class="field" placeholder="🔍 Buscar varitas, alas, coronas…" aria-label="Buscar productos" />
+              <select id="sortSelect" class="field field--select" aria-label="Ordenar">
+                <option value="destacado">✦ Destacados</option>
+                <option value="precio-asc">Precio: menor a mayor</option>
+                <option value="precio-desc">Precio: mayor a menor</option>
+                <option value="nombre">Nombre A-Z</option>
+              </select>
+            </div>
+
+            <div class="chips" id="catChips"><!-- filtros por JS --></div>
+
+            <div class="prodgrid" id="catalogGrid"><!-- productos por JS --></div>
+            <p class="empty" id="catalogEmpty" hidden>🥀 No encontramos tesoros con ese hechizo. Probá otra búsqueda.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ VISTA: NOSOTRAS ═══════════════ -->
+    <section class="view" data-view="nosotros" hidden>
+      <div class="block">
+        <div class="window">
+          <div class="window__bar"><span class="window__dots"><i></i><i></i><i></i></span><span class="window__name">🌿 nuestra-historia.exe</span></div>
+          <div class="window__body about">
+            <h2 class="h2">Nuestra historia</h2>
+            <div class="about__lead">
+              <div class="about__art" aria-hidden="true">🌳🧚‍♀️🍄</div>
+              <p>Cuentan que <b>Hadaluz</b> nació una noche de luna llena, cuando una hada costurera llamada <em>Lumi</em> encontró un telar de rocío escondido entre las raíces del Roble Antiguo.</p>
+            </div>
+            <p>Con hilos de luz de luna, pétalos de magnolia y polvo de estrellas, Lumi empezó a coser vestidos que brillaban solos en la oscuridad. Las demás hadas del bosque venían de lejos a pedirle alas nuevas, coronas de rocío y capas tejidas con susurros del viento.</p>
+            <p>Hoy, el taller de Lumi es la boutique encantada más querida del reino. Cada prenda sigue haciéndose a mano, una por una, con la promesa de que <b>quien la use brille con luz propia</b>. No vendemos ropa: regalamos magia que se puede vestir.</p>
+
+            <div class="values">
+              <div class="value reveal"><span>🌙</span><h3>Hecho con magia real</h3><p>Materiales recolectados con respeto por el bosque y sus criaturas.</p></div>
+              <div class="value reveal"><span>🦋</span><h3>Cada hada es única</h3><p>Diseños pensados para celebrar tu brillo, no para esconderlo.</p></div>
+              <div class="value reveal"><span>🌷</span><h3>Bosque cuidado</h3><p>Empaques de pétalo reciclado y huella encantada cero.</p></div>
+            </div>
+
+            <button class="btn btn--glossy" data-go="catalogo">Descubrir la colección 🌸</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ VISTA: CONTACTO ═══════════════ -->
+    <section class="view" data-view="contacto" hidden>
+      <div class="block">
+        <div class="window">
+          <div class="window__bar"><span class="window__dots"><i></i><i></i><i></i></span><span class="window__name">✉️ contacto.exe</span></div>
+          <div class="window__body">
+            <h2 class="h2">Enviá una carta encantada</h2>
+            <p class="muted">Una luciérnaga llevará tu mensaje hasta el taller. Respondemos en menos de una luna.</p>
+            <div class="contact">
+              <div class="contact__form">
+                <div class="grid2">
+                  <label class="lbl">Tu nombre de hada<input class="field" id="cName" placeholder="Lumi Estelar"></label>
+                  <label class="lbl">Correo de rocío<input class="field" id="cMail" type="email" placeholder="hada@bosque.com"></label>
+                </div>
+                <label class="lbl">Asunto<input class="field" id="cSubject" placeholder="Quiero una corona a medida ✦"></label>
+                <label class="lbl">Tu mensaje<textarea class="field" id="cMsg" rows="5" placeholder="Contanos tu deseo…"></textarea></label>
+                <button class="btn btn--glossy" id="contactBtn">Enviar con luciérnaga 🪲✨</button>
+                <p class="news__msg" id="contactMsg" role="status"></p>
+              </div>
+              <aside class="contact__info">
+                <h3>El taller</h3>
+                <p>🌳 Claro del Roble Antiguo, Bosque de Luz</p>
+                <p>🕰️ Lun a Vie · de la primera a la última luciérnaga</p>
+                <p>✉️ hola@hadaluz.magic</p>
+                <p>☎️ +54 (bosque) HADA-LUZ</p>
+                <div class="social"><a>🦋</a><a>🌸</a><a>⭐</a><a>🍄</a></div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ VISTA: LOGIN ═══════════════ -->
+    <section class="view" data-view="login" hidden>
+      <div class="block auth">
+        <div class="window window--auth">
+          <div class="window__bar"><span class="window__dots"><i></i><i></i><i></i></span><span class="window__name">🔑 ingresar.exe</span></div>
+          <div class="window__body">
+            <div class="auth__art" aria-hidden="true">🧚‍♀️</div>
+            <h2 class="h2">Bienvenida de nuevo</h2>
+            <p class="muted">Ingresá a tu rincón mágico.</p>
+            <label class="lbl">Correo<input class="field" id="logMail" type="email" placeholder="hada@bosque.com"></label>
+            <label class="lbl">Contraseña<input class="field" id="logPass" type="password" placeholder="••••••••"></label>
+            <div class="auth__row"><label class="check"><input type="checkbox"> Recordarme</label><a class="link">¿Olvidaste tu hechizo?</a></div>
+            <button class="btn btn--glossy btn--full" id="loginBtn">Entrar ✦</button>
+            <p class="auth__switch">¿Todavía no sos parte del círculo? <a class="link" data-go="registro">Registrate</a></p>
+            <p class="news__msg" id="loginMsg" role="status"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ VISTA: REGISTRO ═══════════════ -->
+    <section class="view" data-view="registro" hidden>
+      <div class="block auth">
+        <div class="window window--auth">
+          <div class="window__bar"><span class="window__dots"><i></i><i></i><i></i></span><span class="window__name">🌟 registrarse.exe</span></div>
+          <div class="window__body">
+            <div class="auth__art" aria-hidden="true">✨</div>
+            <h2 class="h2">Sumate al círculo de hadas</h2>
+            <p class="muted">Creá tu cuenta y empezá a brillar.</p>
+            <label class="lbl">Nombre de hada<input class="field" id="regName" placeholder="Lumi Estelar"></label>
+            <label class="lbl">Correo<input class="field" id="regMail" type="email" placeholder="hada@bosque.com"></label>
+            <label class="lbl">Contraseña<input class="field" id="regPass" type="password" placeholder="creá un hechizo secreto"></label>
+            <label class="check check--terms"><input type="checkbox" id="regTerms"> Acepto los encantamientos y términos del bosque</label>
+            <button class="btn btn--glossy btn--full" id="registerBtn">Crear mi cuenta mágica 🌸</button>
+            <p class="auth__switch">¿Ya tenés cuenta? <a class="link" data-go="login">Ingresá</a></p>
+            <p class="news__msg" id="registerMsg" role="status"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ╔══════════════════════════════════════╗
+       ║   FOOTER COMPLETO                     ║
+       ╚══════════════════════════════════════╝ -->
+  <footer class="footer">
+    <div class="footer__cloud" aria-hidden="true"></div>
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <div class="logo logo--footer"><span class="logo__text">Hadaluz</span></div>
+        <p>Moda encantada del bosque, hecha a mano con luz de luna desde tiempos inmemoriales.</p>
+        <div class="social"><a>🦋</a><a>🌸</a><a>⭐</a><a>🍄</a><a>🎀</a></div>
+      </div>
+      <div class="footer__col"><h4>Tienda</h4><a data-go="catalogo">Catálogo</a><a data-go="catalogo">Novedades</a><a data-go="catalogo">Ofertas de luna</a><a data-go="catalogo">Edición limitada</a></div>
+      <div class="footer__col"><h4>Ayuda</h4><a data-go="contacto">Contacto</a><a>Envíos y entregas</a><a>Cambios y devoluciones</a><a>Guía de talles</a></div>
+      <div class="footer__col"><h4>Hadaluz</h4><a data-go="nosotros">Nuestra historia</a><a>Trabajá con hadas</a><a>Compromiso con el bosque</a><a>Términos encantados</a></div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2025 Hadaluz · boutique encantada del bosque · hecho con 💖 y purpurina</p>
+      <p class="footer__egg" data-egg="footer">✦ buscá las hadas escondidas ✦</p>
+    </div>
+  </footer>
+
+  <!-- ╔══════════════════════════════════════╗
+       ║   DRAWER: CARRITO                    ║
+       ╚══════════════════════════════════════╝ -->
+  <div class="overlay" id="overlay" hidden></div>
+
+  <aside class="drawer" id="cartDrawer" aria-hidden="true" aria-label="Carrito">
+    <div class="drawer__head"><h3>🛍️ Tu canasta mágica</h3><button class="closebtn" data-close>✕</button></div>
+    <div class="drawer__body" id="cartItems"><!-- items por JS --></div>
+    <div class="drawer__foot" id="cartFoot">
+      <div class="sumrow"><span>Subtotal</span><b id="cartSubtotal">$0</b></div>
+      <div class="sumrow"><span>Envío encantado</span><b id="cartShip">$0</b></div>
+      <div class="sumrow sumrow--total"><span>Total</span><b id="cartTotal">$0</b></div>
+      <button class="btn btn--glossy btn--full" id="checkoutBtn">Finalizar compra ✦</button>
+      <p class="drawer__note">🚚 Envío gratis desde $25.000</p>
+    </div>
+  </aside>
+
+  <!-- ╔══════════════════════════════════════╗
+       ║   DRAWER: FAVORITOS                  ║
+       ╚══════════════════════════════════════╝ -->
+  <aside class="drawer" id="favDrawer" aria-hidden="true" aria-label="Favoritos">
+    <div class="drawer__head"><h3>💖 Tus deseos</h3><button class="closebtn" data-close>✕</button></div>
+    <div class="drawer__body" id="favItems"><!-- favoritos por JS --></div>
+  </aside>
+
+  <!-- ╔══════════════════════════════════════╗
+       ║   MODAL: DETALLE DE PRODUCTO         ║
+       ╚══════════════════════════════════════╝ -->
+  <div class="modal" id="productModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal__card window">
+      <div class="window__bar"><span class="window__dots"><i></i><i></i><i></i></span><span class="window__name" id="pmTitleBar">producto.exe</span><button class="window__x" data-close>✕</button></div>
+      <div class="window__body modal__body" id="pmBody"><!-- detalle por JS --></div>
+    </div>
+  </div>
+
+  <!-- Toast de notificaciones -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
